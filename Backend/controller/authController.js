@@ -22,3 +22,24 @@ export const signup = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "User does not exist" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
+
+    const payload = { user: { id: user.id } };
+    const token = jwt.sign(payload, process.env.secret, { expiresIn: "1h" });
+    res.json({ token });
+  } catch (err) {
+    console.log(err.messgae);
+    res.status(500).send("Server error");
+  }
+};
