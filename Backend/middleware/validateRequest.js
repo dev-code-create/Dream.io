@@ -20,3 +20,8 @@ export const loginRules = [
   body("email", "Please include a valid email").isEmail(),
   body("password", "Password is required").exists(),
 ];
+
+export const dreamRules = [
+  body("title", "Title is required").notEmpty(),
+  body("description", "Description is required").notEmpty(),
+];
